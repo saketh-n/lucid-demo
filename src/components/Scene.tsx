@@ -1,6 +1,15 @@
 import { useRef } from 'react'
 import { Mesh } from 'three'
 
+// Constants shared with App.tsx
+const ROAD_WIDTH = 8;
+const CURB_POSITIONS = { left: -4.25, right: 4.25 };
+const CAR_POSITIONS = [
+  { x: 3, z: -8, color: "red" },
+  { x: 0, z: 0, color: "blue" },
+  { x: 3, z: 8, color: "yellow" }
+];
+
 function Car({ position, color, rotation = 0 }: { position: [number, number, number], color: string, rotation?: number }) {
   return (
     <group position={position} rotation={[0, rotation, 0]}>
@@ -46,18 +55,18 @@ export default function Scene() {
 
       {/* Road */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.4, 0]} receiveShadow>
-        <planeGeometry args={[8, 100]} />
+        <planeGeometry args={[ROAD_WIDTH, 100]} />
         <meshStandardMaterial color="#444444" />
       </mesh>
 
       {/* Left Curb */}
-      <mesh position={[-4.25, -0.25, 0]} castShadow receiveShadow>
+      <mesh position={[CURB_POSITIONS.left, -0.25, 0]} castShadow receiveShadow>
         <boxGeometry args={[0.5, 0.3, 100]} />
         <meshStandardMaterial color="#808080" />
       </mesh>
 
       {/* Right Curb */}
-      <mesh position={[4.25, -0.25, 0]} castShadow receiveShadow>
+      <mesh position={[CURB_POSITIONS.right, -0.25, 0]} castShadow receiveShadow>
         <boxGeometry args={[0.5, 0.3, 100]} />
         <meshStandardMaterial color="#808080" />
       </mesh>
@@ -75,9 +84,13 @@ export default function Scene() {
       </mesh>
 
       {/* Cars - parallel parked */}
-      <Car position={[3, 0, -8]} color="red" /> {/* Right side, close to curb */}
-      <Car position={[0, 0, 0]} color="blue" /> {/* Center of road */}
-      <Car position={[3, 0, 8]} color="yellow" /> {/* Right side, close to curb */}
+      {CAR_POSITIONS.map((car, index) => (
+        <Car 
+          key={index}
+          position={[car.x, 0, car.z]}
+          color={car.color}
+        />
+      ))}
     </>
   )
 } 
