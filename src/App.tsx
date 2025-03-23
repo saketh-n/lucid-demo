@@ -2,18 +2,20 @@ import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Sky } from '@react-three/drei'
 import Scene from './components/Scene'
 import Minimap from './components/Minimap'
+import { useState } from 'react'
 import './App.css'
 
 // Constants for the scene
 const ROAD_WIDTH = 8;
 const CURB_POSITIONS = { left: -4.25, right: 4.25 };
-const CAR_POSITIONS = [
+const STATIC_CAR_POSITIONS = [
   { x: 3, z: -8, color: "red" },
-  { x: 0, z: 0, color: "blue" },
   { x: 3, z: 8, color: "yellow" }
 ];
 
 function App() {
+  const [blueCarPosition, setBlueCarPosition] = useState({ x: 0, z: 0 });
+
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
       <Canvas shadows camera={{ position: [15, 15, 15], fov: 60 }}>
@@ -25,7 +27,7 @@ function App() {
           intensity={2}
           shadow-mapSize={1024}
         />
-        <Scene />
+        <Scene onBlueCarPositionUpdate={setBlueCarPosition} />
         <OrbitControls 
           enablePan={true}
           enableZoom={true}
@@ -36,7 +38,10 @@ function App() {
         />
       </Canvas>
       <Minimap 
-        carPositions={CAR_POSITIONS}
+        carPositions={[
+          ...STATIC_CAR_POSITIONS,
+          { ...blueCarPosition, color: "blue" }
+        ]}
         roadWidth={ROAD_WIDTH}
         curbPositions={CURB_POSITIONS}
       />
