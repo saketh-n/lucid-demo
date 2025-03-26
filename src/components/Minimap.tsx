@@ -24,7 +24,8 @@ const Minimap: React.FC<MinimapProps> = ({ carPositions, roadWidth, curbPosition
       .filter(other => other.color !== car.color)
       .map(other => ({
         color: other.color,
-        distance: Math.sqrt(Math.pow(car.x - other.x, 2) + Math.pow(car.z - other.z, 2)).toFixed(2)
+        dx: (other.x - car.x).toFixed(2),
+        dz: (other.z - car.z).toFixed(2)
       }));
 
     return {
@@ -113,7 +114,7 @@ const Minimap: React.FC<MinimapProps> = ({ carPositions, roadWidth, curbPosition
                   fontSize="11"
                   dominantBaseline="middle"
                 >
-                  {`To ${other.color} car: ${other.distance}m`}
+                  {`To ${other.color} car: dx=${other.dx}, dz=${other.dz}`}
                 </text>
               ))}
             </g>
